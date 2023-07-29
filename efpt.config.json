@@ -24,7 +24,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "C:\\D\\workspace\\VSCode\\WordsKiller\\WordsEater\\Data\\DataBase\\WordList.db",
+   "UiHint": "C:\\D\\workspace\\VSCode\\WordsEater\\Data\\DataBase\\WordList.db",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,

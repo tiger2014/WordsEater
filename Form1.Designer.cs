@@ -62,6 +62,7 @@
             label21 = new Label();
             checkBox1 = new CheckBox();
             button1 = new Button();
+            progressBar1 = new ProgressBar();
             SuspendLayout();
             // 
             // label1
@@ -382,6 +383,13 @@
             button1.UseVisualStyleBackColor = false;
             button1.Click += button1_Click;
             // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(20, 786);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(968, 12);
+            progressBar1.TabIndex = 9;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -389,6 +397,7 @@
             BackColor = SystemColors.GradientActiveCaption;
             BackgroundImage = Properties.Resources.winformbackgroud;
             ClientSize = new Size(1784, 861);
+            Controls.Add(progressBar1);
             Controls.Add(button1);
             Controls.Add(checkBox1);
             Controls.Add(label21);
@@ -466,5 +475,6 @@
         private Label label21;
         private CheckBox checkBox1;
         private Button button1;
+        private ProgressBar progressBar1;
     }
 }

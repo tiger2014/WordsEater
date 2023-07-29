@@ -1,21 +1,25 @@
-﻿using AngleSharp;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NAudio.Wave;
+using System.Configuration;
 using System.Diagnostics;
-using System.Linq;
+using System.Xml.Linq;
 using WordsEater.Models;
 
 namespace WordsEater
 {
     public partial class Form1 : Form
     {
+        public static string sqlitePath = "";
+
         private List<Word> oriwords = new List<Word>();//存所有的单词
         private List<Word> words = new List<Word>();//存20个单词
         private List<Word> studiedWords = new List<Word>();
         private List<Word> wrongWords = new List<Word>();
         private List<Label> labelList = new List<Label>();
+
         //private WindowsMediaPlayer wplayer = new WindowsMediaPlayer();
         private Image labelBackground = Properties.Resources.labelLocker;
+
         private StudyType studyType;
 
         /// <summary>
@@ -38,6 +42,13 @@ namespace WordsEater
         {
             InitializeComponent();
 
+            // 1. 读取配置项的值
+            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.config");
+            var xml = XDocument.Load(configPath);
+            var add = xml.Root.Element("appSettings")?.Element("add");
+            sqlitePath = add?.Attribute("value")?.Value??"";
+            textBoxFolderPath.Text = sqlitePath;
+            //textBoxFolderPath.Text = @"C:\D\workspace\VSCode\WordsEater\Data";
             using (var db = new WordListdbContext())
             {
                 var allrecords = db.Words.ToList();
@@ -60,9 +71,7 @@ namespace WordsEater
         //}
 
         private void Form1_Load(object sender, EventArgs e)
-        {
-            textBoxFolderPath.Text = @"C:\D\workspace\VSCode\WordsKiller\WordsEater\Data";
-
+        { 
             // 绘制背景图片
             labelBackground = new Bitmap(labelBackground, label1.Width, label1.Height);
             Image backgroud = new Bitmap(Properties.Resources.winformbackgroud, this.Width, this.Height);
@@ -123,6 +132,7 @@ namespace WordsEater
             buttonD.Click += buttonABCD_Click;
 
             textBox1.ReadOnly = true;
+            progressBar1.Visible = false;
         }
 
         private async void buttonABCD_Click(object sender, EventArgs e)
@@ -385,8 +395,12 @@ namespace WordsEater
             string http = @"http://dict.youdao.com/dictvoice?type=0&audio=";    // type = 0 美音，= 1 英音
             var client = new HttpClient();
             client.Timeout = TimeSpan.FromSeconds(10);
+            progressBar1.Visible = true;
+            progressBar1.Minimum = 0;
+            progressBar1.Maximum = wordsCount;
             for (int i = 0; i < wordsCount; i++)
             {
+                progressBar1.Value = i;
                 if (File.Exists($"{textBoxFolderPath.Text}\\mp3\\{words[i].word.Trim()}.mp3")) continue;
                 try
                 {
@@ -404,6 +418,7 @@ namespace WordsEater
                     UpdateWordsList(StudyType.学习答错的单词);
                 }
             }
+            progressBar1.Visible = false;
 
             //reset20个label
             for (int i = 0; i < labelList.Count; i++)
@@ -520,10 +535,10 @@ namespace WordsEater
         private async void buttonImportData_Click(object sender, EventArgs e)
         {
             #region update words' Examples
+
             /***
             for (int i = 0; i < 20; i++)
             {
-
                 using (var db = new WordListdbContext())
                 {
                     var allwords = db.Words.Where(s => s.Examples == null).Select(s => s);
@@ -558,7 +573,8 @@ namespace WordsEater
                 }
             }
             ***/
-            #endregion
+
+            #endregion update words' Examples
 
             if (textBox1.Text.Trim().Length > 0)
             {
