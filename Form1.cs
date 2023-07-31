@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NAudio.Wave;
-using System.Configuration;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Xml.Linq;
 using WordsEater.Models;
@@ -9,7 +9,8 @@ namespace WordsEater
 {
     public partial class Form1 : Form
     {
-        public static string sqlitePath = "";
+        public static string dataPath = "";
+        public static string databasePath = "";
 
         private List<Word> oriwords = new List<Word>();//存所有的单词
         private List<Word> words = new List<Word>();//存20个单词
@@ -45,9 +46,17 @@ namespace WordsEater
             // 1. 读取配置项的值
             string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.config");
             var xml = XDocument.Load(configPath);
-            var add = xml.Root.Element("appSettings")?.Element("add");
-            sqlitePath = add?.Attribute("value")?.Value??"";
-            textBoxFolderPath.Text = sqlitePath;
+            var adds = xml.Root.Element("appSettings")?.Elements("add");
+            if (adds != null)
+            {
+                foreach (var item in adds)
+                {
+                    if (item?.Attribute("key")?.Value == "dataPath") dataPath = AppDomain.CurrentDomain.BaseDirectory + item?.Attribute("value")?.Value ?? "";
+                }
+            }
+
+            textBoxFolderPath.Text = dataPath;
+            databasePath = dataPath + "\\DataBase\\WordList.db";
             //textBoxFolderPath.Text = @"C:\D\workspace\VSCode\WordsEater\Data";
             using (var db = new WordListdbContext())
             {
@@ -71,7 +80,7 @@ namespace WordsEater
         //}
 
         private void Form1_Load(object sender, EventArgs e)
-        { 
+        {
             // 绘制背景图片
             labelBackground = new Bitmap(labelBackground, label1.Width, label1.Height);
             Image backgroud = new Bitmap(Properties.Resources.winformbackgroud, this.Width, this.Height);
@@ -534,6 +543,38 @@ namespace WordsEater
 
         private async void buttonImportData_Click(object sender, EventArgs e)
         {
+            #region 查询音标
+
+            /***
+            using(var db = new WordListdbContext())
+            {
+                var wordList = db.Words.ToList();
+                var config = AngleSharp.Configuration.Default.WithDefaultLoader();
+                var context = BrowsingContext.New(config);
+                foreach (var item in wordList)
+                {
+                    string url = $"https://www.youdao.com/result?word={item.word.Trim()}&lang=en";
+                    var document = await context.OpenAsync(url);
+
+                    var phone_con = document.QuerySelector("div.phone_con")?.Children;
+                    foreach (var item1 in phone_con)
+                    {
+                        if (item1.OuterHtml.Contains("美"))
+                        {
+                            var phonetic = item1.QuerySelector("span.phonetic")?.InnerHtml;
+                            phonetic = "[" + phonetic?.Substring(1, phonetic.Length - 2) + "]";
+
+                            item.ChineseInterpretation = phonetic??"" + "|" + item.ChineseInterpretation;
+                        }
+                    }
+                }
+
+                await db.SaveChangesAsync();
+            }
+            ***/
+
+            #endregion 查询音标
+
             #region update words' Examples
 
             /***
@@ -575,6 +616,35 @@ namespace WordsEater
             ***/
 
             #endregion update words' Examples
+
+            #region import bao's words
+            /***
+            using (var db = new WordListdbContext())
+            {
+                var list = db.Words.ToList();
+                var httpclient = new HttpClient();
+                string url = @"https://fanyi.youdao.com/translate?&doctype=json&type=AUTO&i=";
+                var inputwords = new List<Words>();
+                foreach (var line in list)
+                {
+                    {
+                        if (!string.IsNullOrWhiteSpace(line.word))
+                        {
+                            var response = await httpclient.GetStringAsync(url + line.word.Trim());
+                            var reult = JsonConvert.DeserializeObject<dynamic>(response);
+
+                            string definition = reult == null ? "" : reult.translateResult[0][0]["tgt"].ToString();
+                            if (!string.IsNullOrWhiteSpace(definition))
+                            {
+                                line.ChineseInterpretation = line.ChineseInterpretation.Replace(" ", "") + "|" + definition;
+                                await db.SaveChangesAsync();
+                            }
+                        }
+                    }
+                }
+            }
+            ***/
+            #endregion import bao's words
 
             if (textBox1.Text.Trim().Length > 0)
             {
