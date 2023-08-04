@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NAudio.Wave;
-using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Xml.Linq;
 using WordsEater.Models;
@@ -42,6 +41,8 @@ namespace WordsEater
         public Form1()
         {
             InitializeComponent();
+
+            // 怎么发布为 msi文件： https://blog.51cto.com/u_13280061/3080173
 
             // 1. 读取配置项的值
             string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.config");

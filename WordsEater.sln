@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WordsEater", "WordsEater.csproj", "{519C31C9-1353-49B9-893F-C5B56AE89389}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Publish\Setup\Setup.vdproj", "{CACB51EE-0007-42BB-8CD6-24E9F5B464F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,8 @@ Global
 		{519C31C9-1353-49B9-893F-C5B56AE89389}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{519C31C9-1353-49B9-893F-C5B56AE89389}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{519C31C9-1353-49B9-893F-C5B56AE89389}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CACB51EE-0007-42BB-8CD6-24E9F5B464F2}.Debug|Any CPU.ActiveCfg = Debug
+		{CACB51EE-0007-42BB-8CD6-24E9F5B464F2}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
