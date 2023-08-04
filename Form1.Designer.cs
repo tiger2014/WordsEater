@@ -358,7 +358,7 @@
             label21.Name = "label21";
             label21.Size = new Size(298, 35);
             label21.TabIndex = 6;
-            label21.Text = "数据贴入上框，格式： dog|[音标]狗狗";
+            label21.Text = "数据贴入上框，格式： dog|[音标]|狗狗";
             label21.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // checkBox1
