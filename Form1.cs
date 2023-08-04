@@ -57,6 +57,13 @@ namespace WordsEater
 
             textBoxFolderPath.Text = dataPath;
             databasePath = dataPath + "\\DataBase\\WordList.db";
+
+            textBoxFolderPath.Enabled = false;
+            buttonSelectFolder.Enabled = false;
+            checkBox1.Enabled = false;
+            textBoxFolderPath.Visible = false;
+            buttonSelectFolder.Visible = false;
+            checkBox1.Visible = false;
             //textBoxFolderPath.Text = @"C:\D\workspace\VSCode\WordsEater\Data";
             using (var db = new WordListdbContext())
             {

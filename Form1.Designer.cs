@@ -343,7 +343,7 @@
             // buttonImportData
             // 
             buttonImportData.BackColor = SystemColors.GradientInactiveCaption;
-            buttonImportData.Location = new Point(1249, 804);
+            buttonImportData.Location = new Point(1226, 798);
             buttonImportData.Name = "buttonImportData";
             buttonImportData.Size = new Size(120, 45);
             buttonImportData.TabIndex = 5;
@@ -354,11 +354,11 @@
             // label21
             // 
             label21.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label21.Location = new Point(1389, 810);
+            label21.Location = new Point(1366, 804);
             label21.Name = "label21";
-            label21.Size = new Size(249, 35);
+            label21.Size = new Size(298, 35);
             label21.TabIndex = 6;
-            label21.Text = "数据贴入上框，格式： dog|狗狗";
+            label21.Text = "数据贴入上框，格式： dog|[音标]狗狗";
             label21.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // checkBox1
