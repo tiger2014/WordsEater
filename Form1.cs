@@ -61,7 +61,7 @@ namespace WordsEater
 
             textBoxFolderPath.Enabled = false;
             buttonSelectFolder.Enabled = false;
-            checkBox1.Enabled = false;
+            //checkBox1.Enabled = false;
             textBoxFolderPath.Visible = false;
             buttonSelectFolder.Visible = false;
             checkBox1.Visible = false;
@@ -95,7 +95,12 @@ namespace WordsEater
             //
 
             this.BackgroundImage = backgroud;
-            var labels = this.Controls.OfType<Label>();
+            var labels = new List<Label>();
+            var tempLabels = this.Controls.OfType<Label>().ToList();
+            for (int i = 20; i > 0; i--)
+            {
+                labels.Add(tempLabels[i]);
+            }
             foreach (var label in labels)
             {
                 Debug.WriteLine(label.Name);
@@ -128,6 +133,7 @@ namespace WordsEater
                 {
                     label.Font = new Font("微软雅黑", 18);
                     label.ForeColor = Color.White;
+                    label.BackColor = SystemColors.GradientActiveCaption;         
                     //label.Image = Properties.Resources._lock;
                     label.TextAlign = ContentAlignment.MiddleCenter;
                     label.Visible = true;
@@ -171,7 +177,7 @@ namespace WordsEater
                         await db.SaveChangesAsync();
                     }
                 }
-                studiedWords.Add(words[presentWord]);
+                if (!studiedWords.Any(s => s.word == words[presentWord].word)) studiedWords.Add(words[presentWord]);
             }
             else
             {
@@ -190,8 +196,7 @@ namespace WordsEater
                         await db.SaveChangesAsync();
                     }
                 }
-
-                wrongWords.Add(words[presentWord]);
+                if (!wrongWords.Any(s => s.word == words[presentWord].word)) wrongWords.Add(words[presentWord]);
             }
 
             buttonA.Enabled = false;
@@ -203,7 +208,7 @@ namespace WordsEater
 
             presentLabel.Focus();
 
-            if (locker.Where(s => s == 2).Count() == 20)
+            if (locker.Where(s => s == 2).Count() == words.Count)
             {
                 UpdateWordsList(studyType);
             }
@@ -360,35 +365,56 @@ namespace WordsEater
                     }
                 }
 
-                foreach (var item in temp)
+                if (temp.Count > 20)
                 {
-                    if (!words.Any(s => s.word == item.word))
+                    foreach (var item in temp)
                     {
-                        newOriwords.Add(item);
+                        if (!words.Any(s => s.word == item.word))
+                        {
+                            newOriwords.Add(item);
+                        }
                     }
+                }
+                else
+                {
+                    newOriwords = temp;
                 }
             }
             else if (studyType == StudyType.复习答对的单词)
             {
                 var temp = new List<Word>();
-                foreach (var item in studiedWords)
+                if (studiedWords.Count > 20)
                 {
-                    if (!words.Any(s => s.word == item.word))
+                    foreach (var item in studiedWords)
                     {
-                        temp.Add(item);
+                        if (!words.Any(s => s.word == item.word))
+                        {
+                            temp.Add(item);
+                        }
                     }
+                }
+                else
+                {
+                    temp = studiedWords;
                 }
                 newOriwords = temp;
             }
             else if (studyType == StudyType.学习答错的单词)
             {
                 var temp = new List<Word>();
-                foreach (var item in wrongWords)
+                if (wrongWords.Count > 20)
                 {
-                    if (!words.Any(s => s.word == item.word))
+                    foreach (var item in wrongWords)
                     {
-                        temp.Add(item);
+                        if (!words.Any(s => s.word == item.word))
+                        {
+                            temp.Add(item);
+                        }
                     }
+                }
+                else
+                {
+                    temp = wrongWords;
                 }
                 newOriwords = temp;
             }
@@ -442,6 +468,7 @@ namespace WordsEater
             {
                 labelList[i].Text = "";
                 labelList[i].TextAlign = ContentAlignment.MiddleCenter;
+                labelList[i].BackColor = SystemColors.GradientActiveCaption;
                 labelList[i].Enabled = false;
                 locker[i] = 0;
             }
