@@ -61,7 +61,7 @@
             buttonImportData = new Button();
             label21 = new Label();
             checkBox1 = new CheckBox();
-            button1 = new Button();
+            buttonShowWrongWords = new Button();
             progressBar1 = new ProgressBar();
             SuspendLayout();
             // 
@@ -372,16 +372,16 @@
             checkBox1.Text = "显示例句";
             checkBox1.UseVisualStyleBackColor = false;
             // 
-            // button1
+            // buttonShowWrongWords
             // 
-            button1.BackColor = SystemColors.Menu;
-            button1.Location = new Point(1081, 208);
-            button1.Name = "button1";
-            button1.Size = new Size(124, 41);
-            button1.TabIndex = 8;
-            button1.Text = "显示选错的单词";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += button1_Click;
+            buttonShowWrongWords.BackColor = SystemColors.Menu;
+            buttonShowWrongWords.Location = new Point(1081, 208);
+            buttonShowWrongWords.Name = "buttonShowWrongWords";
+            buttonShowWrongWords.Size = new Size(124, 41);
+            buttonShowWrongWords.TabIndex = 8;
+            buttonShowWrongWords.Text = "显示选错的单词";
+            buttonShowWrongWords.UseVisualStyleBackColor = false;
+            buttonShowWrongWords.Click += ButtonShowWrongWords_Click;
             // 
             // progressBar1
             // 
@@ -398,7 +398,7 @@
             BackgroundImage = Properties.Resources.winformbackgroud;
             ClientSize = new Size(1784, 861);
             Controls.Add(progressBar1);
-            Controls.Add(button1);
+            Controls.Add(buttonShowWrongWords);
             Controls.Add(checkBox1);
             Controls.Add(label21);
             Controls.Add(buttonImportData);
@@ -474,7 +474,7 @@
         private Button buttonImportData;
         private Label label21;
         private CheckBox checkBox1;
-        private Button button1;
+        private Button buttonShowWrongWords;
         private ProgressBar progressBar1;
     }
 }

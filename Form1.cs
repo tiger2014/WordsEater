@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AngleSharp;
+using Microsoft.EntityFrameworkCore;
 using NAudio.Wave;
 using System.Diagnostics;
 using System.Xml.Linq;
@@ -60,11 +61,11 @@ namespace WordsEater
             databasePath = dataPath + "\\DataBase\\WordList.db";
 
             textBoxFolderPath.Enabled = false;
-            buttonSelectFolder.Enabled = false;
+            //buttonSelectFolder.Enabled = false;
             //checkBox1.Enabled = false;
-            textBoxFolderPath.Visible = false;
-            buttonSelectFolder.Visible = false;
-            checkBox1.Visible = false;
+            //textBoxFolderPath.Visible = false;
+            //buttonSelectFolder.Visible = false;
+            //checkBox1.Visible = false;
             //textBoxFolderPath.Text = @"C:\D\workspace\VSCode\WordsEater\Data";
             using (var db = new WordListdbContext())
             {
@@ -133,7 +134,7 @@ namespace WordsEater
                 {
                     label.Font = new Font("微软雅黑", 18);
                     label.ForeColor = Color.White;
-                    label.BackColor = SystemColors.GradientActiveCaption;         
+                    label.BackColor = SystemColors.GradientActiveCaption;
                     //label.Image = Properties.Resources._lock;
                     label.TextAlign = ContentAlignment.MiddleCenter;
                     label.Visible = true;
@@ -438,12 +439,16 @@ namespace WordsEater
             string http = @"http://dict.youdao.com/dictvoice?type=0&audio=";    // type = 0 美音，= 1 英音
             var client = new HttpClient();
             client.Timeout = TimeSpan.FromSeconds(10);
+            var config = AngleSharp.Configuration.Default.WithDefaultLoader();
+            var context = BrowsingContext.New(config);
             progressBar1.Visible = true;
             progressBar1.Minimum = 0;
             progressBar1.Maximum = wordsCount;
             for (int i = 0; i < wordsCount; i++)
             {
                 progressBar1.Value = i;
+
+                // get mp3
                 if (File.Exists($"{textBoxFolderPath.Text}\\mp3\\{words[i].word.Trim()}.mp3")) continue;
                 try
                 {
@@ -459,6 +464,32 @@ namespace WordsEater
                 catch (Exception e)
                 {
                     UpdateWordsList(StudyType.学习答错的单词);
+                }
+
+                // get samples
+                if (string.IsNullOrWhiteSpace(words[i].examples))
+                {
+                    var address = @"https://www.dictionary.com/browse/" + words[i].word.Trim();
+                    
+                    var document = await context.OpenAsync(address);
+                    var examples = document.QuerySelector("#examples");
+                    var sample = examples?.QuerySelectorAll("p");
+                    //var sample = document.QuerySelectorAll("div.sentence");
+                    string sentences = "";
+                    if (sample != null)
+                    {
+                        foreach (var item1 in sample)
+                        {
+                            sentences += item1.InnerHtml.Replace("<em>", "").Replace("</em>", "") + Environment.NewLine;
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(sentences))
+                    {
+                        var sql = $"update Words set Examples = {sentences} where word = {words[i].word}";
+                        using var db = new WordListdbContext();
+                        await db.Database.ExecuteSqlRawAsync(sql);
+                    }
                 }
             }
             progressBar1.Visible = false;
@@ -704,7 +735,7 @@ namespace WordsEater
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void ButtonShowWrongWords_Click(object sender, EventArgs e)
         {
             using var db = new WordListdbContext();
 
