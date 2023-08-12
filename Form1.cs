@@ -721,15 +721,22 @@ namespace WordsEater
                 {
                     var inputStr = textBox1.Text.Trim().Split(Environment.NewLine);
                     var words = new List<Word>();
+                    if(inputStr!=null)
                     foreach (var item in inputStr)
                     {
-                        if (!string.IsNullOrWhiteSpace(item))
-                        {
-                            var word = new Word();
-                            word.word = item.Split('|')[0].Trim();
-                            word.difinition = item.Split('|')[1].Trim();
-                            words.Add(word);
-                        }
+                            try
+                            {
+                                if (!string.IsNullOrWhiteSpace(item))
+                                {
+                                    var word = new Word();
+                                    word.word = item.Split('|')[0].Trim();
+                                    word.difinition = item.Split('|')[1].Trim();
+                                    words.Add(word);
+                                }
+                            }catch (Exception ex)
+                            {
+                                textBox1.Text = $"数据导入错误。 请检查数据格式是否正确。" + Environment.NewLine + "正确数据格式： ability|[ə'biliti]| n.能力,才干";
+                            }
                     }
 
                     await db.AddRangeAsync(words);
