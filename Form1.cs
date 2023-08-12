@@ -11,6 +11,7 @@ namespace WordsEater
     {
         public static string dataPath = "";
         public static string databasePath = "";
+        public static string samples = ""; 
 
         private List<Word> oriwords = new List<Word>();//存所有的单词
         private List<Word> words = new List<Word>();//存20个单词
@@ -278,7 +279,8 @@ namespace WordsEater
                 {
                     if (!string.IsNullOrWhiteSpace(item)) text += item + Environment.NewLine + Environment.NewLine;
                 }
-                textBox1.Text = text;
+                samples = text;
+                textBox1.Text = samples;
 
                 presentLabel.Focus();
             }
@@ -470,7 +472,7 @@ namespace WordsEater
                 if (string.IsNullOrWhiteSpace(words[i].examples))
                 {
                     var address = @"https://www.dictionary.com/browse/" + words[i].word.Trim();
-                    
+
                     var document = await context.OpenAsync(address);
                     var examples = document.QuerySelector("#examples");
                     var sample = examples?.QuerySelectorAll("p");
@@ -749,6 +751,18 @@ namespace WordsEater
             }
 
             textBox1.Text = text;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == false)
+            {
+                textBox1.Text = "";
+            }
+            else
+            {
+                textBox1.Text = samples;
+            }
         }
     }
 }

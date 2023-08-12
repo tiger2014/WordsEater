@@ -371,6 +371,7 @@
             checkBox1.TabIndex = 7;
             checkBox1.Text = "显示例句";
             checkBox1.UseVisualStyleBackColor = false;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
             // 
             // buttonShowWrongWords
             // 
