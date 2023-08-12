@@ -59,6 +59,7 @@ namespace WordsEater
             }
 
             textBoxFolderPath.Text = dataPath;
+            textBox1.Text = $"{DateTime.Now.ToString("HH:mm")}: start to study"+Environment.NewLine+ $"working folder: {dataPath}";
             databasePath = dataPath + "\\DataBase\\WordList.db";
 
             textBoxFolderPath.Enabled = false;
