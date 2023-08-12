@@ -272,17 +272,17 @@ namespace WordsEater
                 }
             }
 
-            if (checkBox1.Checked == true)
-            {
-                var text = "";
-                var textList = words[index - 1].examples?.Split(Environment.NewLine).ToList() ?? new List<string>();
-                foreach (var item in textList)
-                {
-                    if (!string.IsNullOrWhiteSpace(item)) text += item + Environment.NewLine + Environment.NewLine;
-                }
-                samples = text;
-                textBox1.Text = samples;
 
+            var text = "";
+            var textList = words[index - 1].examples?.Split(Environment.NewLine).ToList() ?? new List<string>();
+            foreach (var item in textList)
+            {
+                if (!string.IsNullOrWhiteSpace(item)) text += item + Environment.NewLine + Environment.NewLine;
+            }
+            samples = text;
+            if (checkBox1.Checked == true)
+            {                
+                textBox1.Text = samples;
                 presentLabel.Focus();
             }
 
