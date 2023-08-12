@@ -719,6 +719,7 @@ namespace WordsEater
             {
                 using (var db = new WordListdbContext())
                 {
+                    var allwords = db.Words.ToList();
                     var inputStr = textBox1.Text.Trim().Split(Environment.NewLine);
                     var words = new List<Word>();
                     if(inputStr!=null)
@@ -731,7 +732,7 @@ namespace WordsEater
                                     var word = new Word();
                                     word.word = item.Split('|')[0].Trim();
                                     word.difinition = item.Split('|')[1].Trim();
-                                    words.Add(word);
+                                    if(!allwords.Any(s=>s.word==word.word)) words.Add(word);
                                 }
                             }catch (Exception ex)
                             {
