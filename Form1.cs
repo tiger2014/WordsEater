@@ -739,9 +739,15 @@ namespace WordsEater
                                 textBox1.Text = $"数据导入错误。 请检查数据格式是否正确。" + Environment.NewLine + "正确数据格式： ability|[ə'biliti]| n.能力,才干";
                             }
                     }
-
-                    await db.AddRangeAsync(words);
-                    await db.SaveChangesAsync();
+                    try
+                    {
+                        await db.AddRangeAsync(words);
+                        await db.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        textBox1.Text = $"数据存入错误。{ex.Message}";
+                    }
                 }
             }
         }
